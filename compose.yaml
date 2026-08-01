@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: my-ai-assistant-mongodb
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:27017:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE_NAME}
+
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

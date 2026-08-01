@@ -1,0 +1,20 @@
+{
+  "id": "c6a07120dd7aeb48dd246860d699dc87",
+  "metadata": {
+    "id": "c6a07120dd7aeb48dd246860d699dc87",
+    "url": "data/raw/first_note.md",
+    "title": "Understanding RAG",
+    "properties": {
+      "file_name": "first_note.md",
+      "file_type": "markdown"
+    }
+  },
+  "parent_metadata": null,
+  "content_quality_score": 0.5,
+  "content": "# Understanding RAG\n\nRetrieval-Augmented Generation, usually called RAG, helps an AI answer questions using information from our own documents.\n\n## How it works\n\nA basic RAG system follows these steps:\n\n1. Split documents into smaller chunks.\n2. Convert each chunk into an embedding.\n3. Store the embeddings in a vector database.\n4. Find relevant chunks when the user asks a question.\n5. Give those chunks to the language model as context.\n\n## Why use RAG?\n\nRAG helps reduce hallucinations because the model receives relevant information before producing its answer.\n\n## Resources\n\n- [OpenAI Documentation](https://platform.openai.com/docs)\n- [ZenML Documentation](https://docs.zenml.io)",
+  "summary": null,
+  "child_urls": [
+    "https://platform.openai.com/docs",
+    "https://docs.zenml.io"
+  ]
+}

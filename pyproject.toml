@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "my-ai-assistant"
+version = "0.1.0"
+description = "A personal AI assistant built with RAG and LLMOps."
+requires-python = ">=3.12"
+dependencies = [
+    "zenml[server]==0.73.0",
+    "pydantic==2.8.2",
+    "setuptools==75.8.0",
+    "crawl4ai==0.3.745",
+    "playwright==1.49.1",
+    "pymongo>=4.10,<5",
+    "python-dotenv>=1.0,<2",
+    "matplotlib>=3.9,<4",
+    "pillow>=10,<13",
+    
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "ruff==0.7.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
