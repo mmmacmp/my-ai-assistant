@@ -3,15 +3,26 @@ Name: my-ai-assistant
 Version: 0.1.0
 Summary: A personal AI assistant built with RAG and LLMOps.
 Requires-Python: >=3.12
-Requires-Dist: zenml[server]==0.73.0
 Requires-Dist: pydantic==2.8.2
-Requires-Dist: setuptools==75.8.0
-Requires-Dist: crawl4ai==0.3.745
-Requires-Dist: playwright==1.49.1
 Requires-Dist: pymongo<5,>=4.10
 Requires-Dist: python-dotenv<2,>=1.0
-Requires-Dist: matplotlib<4,>=3.9
-Requires-Dist: pillow<13,>=10
+Requires-Dist: langchain-core<1.0,>=0.3
+Requires-Dist: langchain-text-splitters<1.0,>=0.3
+Requires-Dist: langchain-openai<1.0,>=0.3
+Requires-Dist: langchain-huggingface<1.0,>=0.1
+Requires-Dist: langchain-mongodb<1.0,>=0.4
+Requires-Dist: sentence-transformers<6.0,>=3.0
+Requires-Dist: openai==1.59.9
+Requires-Dist: opik>=0.1.0
+Provides-Extra: offline
+Requires-Dist: zenml[server]==0.73.0; extra == "offline"
+Requires-Dist: crawl4ai==0.3.745; extra == "offline"
+Requires-Dist: playwright==1.49.1; extra == "offline"
+Requires-Dist: matplotlib<4,>=3.9; extra == "offline"
+Requires-Dist: pillow<13,>=10; extra == "offline"
+Provides-Extra: online
+Requires-Dist: smolagents<2.0,>=1.4.1; extra == "online"
+Requires-Dist: gradio<6.0,>=5.12.0; extra == "online"
 Provides-Extra: dev
 Requires-Dist: pytest==8.3.4; extra == "dev"
 Requires-Dist: ruff==0.7.2; extra == "dev"

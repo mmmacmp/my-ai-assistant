@@ -39,6 +39,16 @@ class MongoDBService(Generic[T]):
         self.database = self.client[database_name]
         self.collection = self.database[collection_name]
 
+    def __enter__(self):
+        print(f"Opening {self.ping()}")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self:
+            self.close()
+            print(f"Closed {self.collection._name}")
+
+        
     def ping(self) -> None:
         """Verify that MongoDB is reachable."""
 

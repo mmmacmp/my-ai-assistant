@@ -11,28 +11,17 @@ def fetch_from_mongodb(
     collection_name: str = "raw_documents",
     limit: int = 1000,
 ) -> Annotated[list[Document], "documents"]:
-    service = MongoDBService(
-        model=Document,
-        collection_name=collection_name,
-    )
+    docs = []
+    with MongoDBService(collection_name=collection_name, model=Document) as service:
+        docs = service.fetch_documents(limit=limit)
 
-    try:
-        service.ping()
+    get_step_context().add_output_metadata(output_name="documents", metadata= {
+        "collection_name": collection_name,
+        "limit": limit,
+        "count": len(docs)
+    })
 
-        documents = service.fetch_documents(
-            limit=limit,
-            query={},
-        )
-    finally:
-        service.close()
+    return docs
+        
 
-    get_step_context().add_output_metadata(
-        output_name="documents",
-        metadata={
-            "collection_name": collection_name,
-            "count": len(documents),
-            "fetch_limit": limit,
-        },
-    )
-
-    return documents
+    

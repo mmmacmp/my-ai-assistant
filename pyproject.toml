@@ -8,19 +8,35 @@ version = "0.1.0"
 description = "A personal AI assistant built with RAG and LLMOps."
 requires-python = ">=3.12"
 dependencies = [
-    "zenml[server]==0.73.0",
     "pydantic==2.8.2",
-    "setuptools==75.8.0",
-    "crawl4ai==0.3.745",
-    "playwright==1.49.1",
     "pymongo>=4.10,<5",
     "python-dotenv>=1.0,<2",
-    "matplotlib>=3.9,<4",
-    "pillow>=10,<13",
-    
+    "langchain-core>=0.3,<1.0",
+    "langchain-text-splitters>=0.3,<1.0",
+    "langchain-openai>=0.3,<1.0",
+    "langchain-huggingface>=0.1,<1.0",
+    "langchain-mongodb>=0.4,<1.0",
+    "sentence-transformers>=3.0,<6.0",
+    "openai==1.59.9",
+    "opik>=0.1.0",
 ]
 
 [project.optional-dependencies]
+# Offline pipelines: data collection, ETL, fine-tuning, orchestration (Lessons 1-5)
+offline = [
+    "zenml[server]==0.73.0",
+    "crawl4ai==0.3.745",
+    "playwright==1.49.1",
+    "matplotlib>=3.9,<4",
+    "pillow>=10,<13",
+]
+
+# Online agentic RAG app: the agent, tools, and UI (Lesson 6)
+online = [
+    "smolagents>=1.4.1,<2.0",
+    "gradio>=5.12.0,<6.0",
+]
+
 dev = [
     "pytest==8.3.4",
     "ruff==0.7.2",
