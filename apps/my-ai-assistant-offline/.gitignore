@@ -1,0 +1,5 @@
+# Local configuration can contain credentials.
+.env
+.env.*
+!.env.example
+!.env.compose.example

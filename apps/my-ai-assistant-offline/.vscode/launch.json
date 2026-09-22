@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Current Python File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv-offline/bin/python",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "purpose": [
+        "debug-in-terminal"
+      ]
+    }
+  ]
+}

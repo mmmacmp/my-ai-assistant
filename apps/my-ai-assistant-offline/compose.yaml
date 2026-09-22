@@ -1,0 +1,22 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local:preview
+    container_name: my-ai-assistant-mongodb
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:27017:27017"
+
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+
+    volumes:
+      - atlas_mongodb_data:/data/db
+      - atlas_mongodb_config:/data/configdb
+      - atlas_mongodb_search:/data/mongot
+
+volumes:
+  atlas_mongodb_data:
+  atlas_mongodb_config:
+  atlas_mongodb_search:
