@@ -14,6 +14,7 @@ from my_ai_assistant_online.application.rag.types import (
     RetrieverType,
 )
 from my_ai_assistant_online.config import OnlineSettings, get_settings
+from my_ai_assistant_online.opik_utils import configure_opik
 
 
 class AgentWrapper:
@@ -87,7 +88,12 @@ class AgentWrapper:
 
         return cls(agent)
 
-    @opik.track(name="Agent.run")
+    @opik.track(
+        name="Agent.run",
+        capture_input=False,
+        capture_output=False,
+        ignore_arguments=["self"],
+    )
     def run(self, task: str, **kwargs: Any) -> Any:
         result = self.__agent.run(task, **kwargs)
 
@@ -98,6 +104,7 @@ class AgentWrapper:
             "model_id": model.model_id,
             "input_token_count": getattr(model, "last_input_token_count", None),
             "output_token_count": getattr(model, "last_output_token_count", None),
+            "task_character_count": len(task),
         }
         if hasattr(self.__agent, "step_number"):
             metadata["step_number"] = self.__agent.step_number
@@ -116,6 +123,7 @@ def get_agent(
     settings: OnlineSettings | None = None,
 ) -> AgentWrapper:
     app_settings = settings or get_settings()
+    configure_opik(app_settings.opik)
 
     return AgentWrapper.build(
         collection_name=(collection_name or app_settings.mongodb.rag_collection_name),

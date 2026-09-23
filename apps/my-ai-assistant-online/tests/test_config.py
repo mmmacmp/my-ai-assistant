@@ -19,7 +19,13 @@ CONFIG_ENVIRONMENT_NAMES = (
     "RAG_RETRIEVER_K",
     "RAG_DEVICE",
     "AGENT_MAX_STEPS",
+    "EVALUATION_DATASET_NAME",
+    "EVALUATION_EXPERIMENT_NAME_PREFIX",
     "COMET_API_KEY",
+    "OPIK_ENABLED",
+    "OPIK_API_KEY",
+    "OPIK_WORKSPACE",
+    "OPIK_PROJECT_NAME",
 )
 
 
@@ -115,9 +121,22 @@ def test_settings_parse_canonical_grouped_environment_names(
     monkeypatch.setenv("RAG_RETRIEVER_K", "9")
     monkeypatch.setenv("RAG_DEVICE", "cuda:0")
     monkeypatch.setenv("MONGODB_RAG_COLLECTION_NAME", "canonical_rag")
+    monkeypatch.setenv("OPIK_ENABLED", "true")
+    monkeypatch.setenv("OPIK_API_KEY", "opik-test-secret")
+    monkeypatch.setenv("OPIK_WORKSPACE", "test-workspace")
+    monkeypatch.setenv("OPIK_PROJECT_NAME", "test-project")
+    monkeypatch.setenv("EVALUATION_DATASET_NAME", "test-dataset")
+    monkeypatch.setenv("EVALUATION_EXPERIMENT_NAME_PREFIX", "test-experiment")
 
     settings = OnlineSettings(_env_file=None)
 
     assert settings.rag.retriever_k == 9
     assert settings.rag.device == "cuda:0"
     assert settings.mongodb.rag_collection_name == "canonical_rag"
+    assert settings.opik.enabled is True
+    assert settings.opik.api_key is not None
+    assert settings.opik.api_key.get_secret_value() == "opik-test-secret"
+    assert settings.opik.workspace == "test-workspace"
+    assert settings.opik.project_name == "test-project"
+    assert settings.evaluation.dataset_name == "test-dataset"
+    assert settings.evaluation.experiment_name_prefix == "test-experiment"

@@ -46,7 +46,9 @@ def test_get_agent_resolves_and_injects_settings(
 ) -> None:
     expected_agent = object()
     build = MagicMock(return_value=expected_agent)
+    configure_opik = MagicMock()
     monkeypatch.setattr(agents_module.AgentWrapper, "build", build)
+    monkeypatch.setattr(agents_module, "configure_opik", configure_opik)
     settings = OnlineSettings(
         _env_file=None,
         openai={"api_key": "openai-test-secret", "model_id": "gpt-test"},
@@ -68,6 +70,7 @@ def test_get_agent_resolves_and_injects_settings(
     )
 
     assert result is expected_agent
+    configure_opik.assert_called_once_with(settings.opik)
     build.assert_called_once_with(
         collection_name="rag_test",
         embedding_model_id="embedding-test",

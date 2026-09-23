@@ -1,5 +1,10 @@
+import opik
+from opik import opik_context
 from smolagents import Tool
 
+from my_ai_assistant_online.application.agents.tools.names import (
+    MONGODB_RETRIEVER_TOOL_NAME,
+)
 from my_ai_assistant_online.application.rag.retrievers import get_retriever
 from my_ai_assistant_online.application.rag.types import (
     EmbeddingModelType,
@@ -8,7 +13,7 @@ from my_ai_assistant_online.application.rag.types import (
 
 
 class MongoDBRetrieverTool(Tool):
-    name = "mongodb_retriever"
+    name = MONGODB_RETRIEVER_TOOL_NAME
     description = """Use this tool to search and retrieve relevant documents from the knowledge base
     using semantic search. Best used when you need specific information, context about a topic, or
     supporting sources for an answer. Returns multiple relevant document snippets with title, url,
@@ -48,8 +53,31 @@ class MongoDBRetrieverTool(Tool):
             openai_api_key=openai_api_key,
         )
 
+        self._trace_metadata = {
+            "embedding_model_id": embedding_model_id,
+            "embedding_model_type": embedding_model_type,
+            "retriever_type": retriever_type,
+            "top_k": k,
+            "device": device,
+        }
+
+    @opik.track(
+        name="MongoDBRetrieverTool.forward",
+        type="tool",
+        capture_input=False,
+        capture_output=False,
+        ignore_arguments=["self"],
+    )
     def forward(self, query: str) -> str:
         documents = self.retriever.invoke(query)
+        opik_context.update_current_span(
+            metadata={
+                **self._trace_metadata,
+                "query_character_count": len(query),
+                "retrieved_document_count": len(documents),
+            }
+        )
+
         if not documents:
             return "No relevant documents were found"
 

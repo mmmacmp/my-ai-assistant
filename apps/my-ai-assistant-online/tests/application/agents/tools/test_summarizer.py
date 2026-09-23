@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -13,6 +14,33 @@ def test_mock_mode_needs_no_api_key() -> None:
     tool = SummarizerTool(mock=True, max_characters=4)
 
     assert tool.forward("abcdef") == "abcd"
+
+
+def test_summarizer_records_safe_trace_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    update_current_span = MagicMock()
+    monkeypatch.setattr(
+        summarizer_module.opik_context,
+        "update_current_span",
+        update_current_span,
+    )
+    tool = SummarizerTool(
+        model_id="openai/gpt-test",
+        mock=True,
+        max_characters=4,
+    )
+
+    tool.forward("sensitive document text")
+
+    metadata = update_current_span.call_args.kwargs["metadata"]
+    assert metadata == {
+        "model_id": "openai/gpt-test",
+        "max_characters": 4,
+        "input_character_count": 23,
+        "mock": True,
+    }
+    assert "sensitive document text" not in str(metadata)
 
 
 def test_real_mode_requires_api_key() -> None:

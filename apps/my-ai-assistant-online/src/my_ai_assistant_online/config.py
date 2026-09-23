@@ -58,8 +58,30 @@ class AgentSettings(_ConfigurationGroup):
     max_steps: int = Field(default=3, gt=0)
 
 
+class EvaluationSettings(_ConfigurationGroup):
+    dataset_name: str = "my-ai-assistant-agentic-rag"
+    experiment_name_prefix: str = "agentic-rag"
+
+
 class CometSettings(_ConfigurationGroup):
     api_key: SecretStr | None = None
+
+
+class OpikSettings(_ConfigurationGroup):
+    enabled: bool = False
+    api_key: SecretStr | None = None
+    workspace: str | None = None
+    project_name: str = "my-ai-assistant-online"
+
+    def require_api_key(self) -> str:
+        if self.api_key is None:
+            raise RuntimeError("OPIK_API_KEY is not configured")
+        return self.api_key.get_secret_value()
+
+    def require_workspace(self) -> str:
+        if not self.workspace:
+            raise RuntimeError("OPIK_WORKSPACE is not configured")
+        return self.workspace
 
 
 class OnlineSettings(BaseSettings):
@@ -82,7 +104,9 @@ class OnlineSettings(BaseSettings):
         validation_alias=AliasChoices("RAG", "RETRIEVER"),
     )
     agent: AgentSettings = Field(default_factory=AgentSettings)
+    evaluation: EvaluationSettings = Field(default_factory=EvaluationSettings)
     comet: CometSettings = Field(default_factory=CometSettings)
+    opik: OpikSettings = Field(default_factory=OpikSettings)
 
 
 @lru_cache(maxsize=1)
@@ -96,7 +120,9 @@ Settings = OnlineSettings
 __all__ = [
     "AgentSettings",
     "CometSettings",
+    "EvaluationSettings",
     "MongoDBSettings",
+    "OpikSettings",
     "OnlineSettings",
     "OpenAISettings",
     "RagSettings",

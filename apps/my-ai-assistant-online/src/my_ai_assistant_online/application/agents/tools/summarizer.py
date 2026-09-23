@@ -2,8 +2,10 @@
 
 from typing import cast
 
+import opik
 from litellm import completion
 from litellm.types.utils import Choices, ModelResponse
+from opik import opik_context
 from smolagents.tools import Tool
 
 
@@ -35,7 +37,23 @@ class SummarizerTool(Tool):
         self.mock = mock
         self.api_key = api_key
 
+    @opik.track(
+        name="SummarizerTool.forward",
+        type="tool",
+        capture_input=False,
+        capture_output=False,
+        ignore_arguments=["self"],
+    )
     def forward(self, text: str) -> str:
+        opik_context.update_current_span(
+            metadata={
+                "model_id": self.model_id,
+                "max_characters": self.max_characters,
+                "input_character_count": len(text),
+                "mock": self.mock,
+            }
+        )
+
         if self.mock:
             return text[: self.max_characters]
 
